@@ -1,98 +1,102 @@
-import e from "express";
 import express from "express";
 import fs from 'fs';
 
 const app = express();
 app.use(express.json());
 
-const jsonData = fs.readFileSync('palavras.json', 'utf-8');
-const palavras = JSON.parse(jsonData);
+const jsonData = fs.readFileSync('dictionary.json', 'utf-8');
+const words = JSON.parse(jsonData);
 
-const testarPalavra = (palavra) => {
-    return palavras.some((e) => e === palavra);
+const testWord = (word) => {
+    return words.some((e) => e === word);
 };
 
-const testarPrefixo = (prefixo) => {
-    return palavras.filter((e) => e.startsWith(prefixo));
+const testPrefix = (prefix) => {
+    return words.filter((e) => e.startsWith(prefix));
 }
 
-const testarInfixo = (sufixo) => {
-    return palavras.filter((e) => e.includes(sufixo));
+const testInfix = (infix) => {
+    return words.filter((e) => e.includes(infix));
 }
 
-const testarSufixo = (sufixo) => {
-    return palavras.filter((e) => e.endsWith(sufixo));
+const testSuffix = (sufix) => {
+    return words.filter((e) => e.endsWith(sufix));
 }
 
-const palavraAleatoria = (tamanho) => {
-    const subconjunto = tamanho ? palavras.filter((e) => e.length === tamanho) : palavras;
-    return subconjunto[Math.floor((Math.random() * subconjunto.length))]
+const randomWord = (length) => {
+    const searchGroup = length ? words.filter((e) => e.length === length) : words;
+    return searchGroup[Math.floor((Math.random() * searchGroup.length))]
 }
 
 app.get("/", (req, res) => {
-    res.status(200).send("Bem vindo a API dicionário");
+    res.status(200).send("Welcome to the dictionary API");
 });
 
-app.get('/palavra/:valor', (req, res) => {
-    const valor = req.params.valor.toString().toLowerCase();
-    const resultado = testarPalavra(valor)
-    if (resultado) {
-        res.status(200).json([valor]);
+app.get('/word/:value', (req, res) => {
+    const value = req.params.value.toString().toLowerCase();
+    const response = testWord(value)
+    if (response) {
+        res.status(200).json([value]);
     } else {
         res.status(404).json([]);
     }
 });
 
-app.get('/prefixo/:valor', (req, res) => {
-    const valor = req.params.valor.toString().toLowerCase();
-    const resultado = testarPrefixo(valor);
-    if (resultado != []) {
-        res.status(200).json(resultado);
+app.get('/prefix/:value', (req, res) => {
+    const value = req.params.value.toString().toLowerCase();
+    const response = testPrefix(value);
+    if (response.length > 0) {
+        res.status(200).json(response);
     }
     else {
-        res.status(404).json(resultado);
+        res.status(404).json(response);
     }
 });
 
-app.get('/infixo/:valor', (req, res) => {
-    const valor = req.params.valor.toString().toLowerCase();
-    const resultado = testarInfixo(valor);
-    if (resultado != []) {
-        res.status(200).json(resultado);
+app.get('/infix/:value', (req, res) => {
+    const value = req.params.value.toString().toLowerCase();
+    const response = testInfix(value);
+    if (response.length > 0) {
+        res.status(200).json(response);
     }
     else {
-        res.status(404).json(resultado);
+        res.status(404).json(response);
     }
 });
 
-app.get('/sufixo/:valor', (req, res) => {
-    const valor = req.params.valor.toString().toLowerCase();
-    const resultado = testarSufixo(valor);
-    if (resultado != []) {
-        res.status(200).json(resultado);
+app.get('/suffix/:value', (req, res) => {
+    const value = req.params.value.toString().toLowerCase();
+    const response = testSuffix(value);
+    if (response.length > 0) {
+        res.status(200).json(response);
     }
     else {
-        res.status(404).json(resultado);
+        res.status(404).json(response);
     }
 });
 
 app.get('/aleatorio/', (req, res) => {
-    res.status(200).json(palavraAleatoria(false));
+    res.status(200).json(randomWord(false));
 });
 
-app.get('/aleatorio/:tamanho', (req, res) => {
-    const tamanho = Number(req.params.tamanho);
-    if (Number.isInteger(tamanho)) {
-        res.status(200).json(palavraAleatoria(tamanho));
+app.get('/aleatorio/:length', (req, res) => {
+    const length = Number(req.params.length);
+    if (Number.isInteger(length) && length > 0) {
+        const word = randomWord(length);
+        if (word) {
+            res.status(200).json(word);
+        } else {
+            res.status(404).json({ error: `No words found with length ${length}` });
+        }
     } else {
         res.status(400).json({
-            error: "Parâmetro inválido: 'tamanho' deve ser um número inteiro."
+            error: "Invalid Parameter: 'length' must be a positive integer."
         });
     }
 });
 
-const pesquisaAvancada = (pfx, ifx, sfx, min, max) => {
-    return palavras.filter((e) =>
+const advancedSearch = (pfx, ifx, sfx, min, max) => {
+    return words.filter((e) =>
         e.startsWith(pfx) &&
         e.includes(ifx) &&
         e.endsWith(sfx) &&
@@ -101,16 +105,16 @@ const pesquisaAvancada = (pfx, ifx, sfx, min, max) => {
     );
 }
 
-app.get('/avancado', (req, res) => {
+app.get('/advanced', (req, res) => {
     const { pfx = "", ifx = "", sfx = "", min = "0", max = "99" } = req.query;
     const minNum = Number(min);
     const maxNum = Number(max);
 
     if (isNaN(minNum) || isNaN(maxNum)) {
-        return res.status(400).json({ error: "Parâmetros 'min' ou 'max' inválidos." });
+        return res.status(400).json({ error: "Parameters 'min' or 'max' are invalid." });
     }
     
-    res.status(200).json(pesquisaAvancada(pfx, ifx, sfx, minNum, maxNum));
+    res.status(200).json(advancedSearch(pfx, ifx, sfx, minNum, maxNum));
 });
 
 export default app;
