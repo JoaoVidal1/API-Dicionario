@@ -14,44 +14,8 @@ Esta API fornece diversos endpoints para consultar palavras a partir de um arqui
 ## Pré-requisitos
 
 - [Node.js](https://nodejs.org/en/) (versão 12 ou superior)
-- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
-
-## Instalação
-
-1. **Clone este repositório:**
-
-   ```bash
-   git clone https://github.com/seu-usuario/api-dicionario.git
-   cd api-dicionario
-   ```
-
-2. **Instale as dependências:**
-
-   ```bash
-   npm install
-   ```
-
-   ou, se estiver usando yarn:
-
-   ```bash
-   yarn install
-   ```
 
 ## Como Utilizar
-
-1. **Inicie o servidor**:
-
-   ```bash
-   npm start
-   ```
-
-   ou, se você configurou um script no `package.json`, pode ser:
-
-   ```bash
-   node app.js
-   ```
-
-2. **Endpoints Disponíveis:**
    
    - **Raiz (Bem-vindo):**  
      `GET /`  
