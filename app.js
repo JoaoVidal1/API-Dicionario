@@ -110,11 +110,11 @@ app.get('/advanced', (req, res) => {
     const minNum = Number(min);
     const maxNum = Number(max);
 
-    if (isNaN(minNum) || isNaN(maxNum)) {
+    if (isNaN(minNum) || isNaN(maxNum) || minNum > maxNum) {
         return res.status(400).json({ error: "Parameters 'min' or 'max' are invalid." });
     }
     
-    res.status(200).json(advancedSearch(pfx, ifx, sfx, minNum, maxNum));
+    res.status(200).json(advancedSearch(pfx.toLowerCase(), ifx.toLowerCase(), sfx.toLowerCase(), minNum, maxNum));
 });
 
 export default app;
