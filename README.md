@@ -41,19 +41,6 @@ Esta API fornece diversos endpoints para consultar palavras a partir de um arqui
    yarn install
    ```
 
-3. **Crie o arquivo `palavras.json`**  
-   Certifique-se de ter um arquivo `palavras.json` na raiz do projeto contendo um array de palavras. Exemplo:
-
-   ```json
-   [
-       "abacate",
-       "abacateiro",
-       "banana",
-       "manga",
-       "morango"
-   ]
-   ```
-
 ## Como Utilizar
 
 1. **Inicie o servidor**:
