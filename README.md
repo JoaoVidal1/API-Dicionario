@@ -1,7 +1,3 @@
-Below is an example of a comprehensive `README.md` for your API dictionary project:
-
----
-
 # API Dicionário
 
 Esta API fornece diversos endpoints para consultar palavras a partir de um arquivo JSON. É possível consultar se uma palavra existe, pesquisar por prefixo, infixo e sufixo, obter uma palavra aleatória (com ou sem tamanho específico) e realizar pesquisas avançadas utilizando múltiplos critérios.
