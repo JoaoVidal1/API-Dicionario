@@ -7,19 +7,19 @@ app.use(express.json());
 const jsonData = fs.readFileSync('dictionary.json', 'utf-8');
 const words = JSON.parse(jsonData);
 
-const testWord = (word) => {
+const searchWord = (word) => {
     return words.some((e) => e === word);
 };
 
-const testPrefix = (prefix) => {
+const searchPrefix = (prefix) => {
     return words.filter((e) => e.startsWith(prefix));
 }
 
-const testInfix = (infix) => {
+const searchInfix = (infix) => {
     return words.filter((e) => e.includes(infix));
 }
 
-const testSuffix = (sufix) => {
+const searchSuffix = (sufix) => {
     return words.filter((e) => e.endsWith(sufix));
 }
 
@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
 
 app.get('/word/:value', (req, res) => {
     const value = req.params.value.toString().toLowerCase();
-    const response = testWord(value)
+    const response = searchWord(value)
     if (response) {
         res.status(200).json([value]);
     } else {
@@ -44,7 +44,7 @@ app.get('/word/:value', (req, res) => {
 
 app.get('/prefix/:value', (req, res) => {
     const value = req.params.value.toString().toLowerCase();
-    const response = testPrefix(value);
+    const response = searchPrefix(value);
     if (response.length > 0) {
         res.status(200).json(response);
     }
@@ -55,7 +55,7 @@ app.get('/prefix/:value', (req, res) => {
 
 app.get('/infix/:value', (req, res) => {
     const value = req.params.value.toString().toLowerCase();
-    const response = testInfix(value);
+    const response = searchInfix(value);
     if (response.length > 0) {
         res.status(200).json(response);
     }
@@ -66,7 +66,7 @@ app.get('/infix/:value', (req, res) => {
 
 app.get('/suffix/:value', (req, res) => {
     const value = req.params.value.toString().toLowerCase();
-    const response = testSuffix(value);
+    const response = searchSuffix(value);
     if (response.length > 0) {
         res.status(200).json(response);
     }
@@ -75,22 +75,20 @@ app.get('/suffix/:value', (req, res) => {
     }
 });
 
-app.get('/aleatorio/', (req, res) => {
-    res.status(200).json(randomWord(false));
-});
+app.get('/random', (req, res) => {
+    const { len = 0 } = req.query;
+    const wordLength = Number(len)
 
-app.get('/aleatorio/:length', (req, res) => {
-    const length = Number(req.params.length);
-    if (Number.isInteger(length) && length > 0) {
-        const word = randomWord(length);
+    if (Number.isInteger(wordLength) && wordLength >= 0) {
+        const word = randomWord(wordLength);
         if (word) {
             res.status(200).json(word);
         } else {
-            res.status(404).json({ error: `No words found with length ${length}` });
+            res.status(404).json({ error: `No words found${length && ` with length ${length}`}` });
         }
     } else {
         res.status(400).json({
-            error: "Invalid Parameter: 'length' must be a positive integer."
+            error: "Invalid Parameter: 'length' must be a non negative integer."
         });
     }
 });
